@@ -3,7 +3,7 @@
 import { jwtDecode } from 'jwt-decode'
 import cookie from 'cookiejs'
 
-export function getUserData() {
+export async function getUserData() {
 	if (typeof window === 'undefined') {
 		console.error('Fungsi ini hanya dapat dipanggil di sisi client.')
 		return null
@@ -17,8 +17,11 @@ export function getUserData() {
 
 	try {
 		const decoded = jwtDecode(token)
-		console.log('Data pengguna:', decoded)
-		return decoded
+		const response = await fetch(
+			`https://budgetly-api-pa7n.vercel.app/api/users/user/${decoded.userId}`
+		)
+		const data = await response.json()
+		return data
 	} catch (error) {
 		console.error('Error saat mendekode token:', error)
 		return null

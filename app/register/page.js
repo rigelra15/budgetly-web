@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { Helmet } from 'react-helmet'
 
 export default function RegisterPage() {
 	const [displayName, setDisplayName] = useState('')
@@ -75,7 +76,7 @@ export default function RegisterPage() {
 	return (
 		<div className="h-screen flex items-center justify-center bg-gradient-to-br from-primary to-blue-300">
 			<motion.div
-				className="bg-white p-8 rounded shadow-lg w-full max-w-md"
+				className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
 				variants={containerVariants}
 				initial="hidden"
 				animate="visible"
@@ -217,6 +218,14 @@ export default function RegisterPage() {
 					</a>
 				</motion.p>
 			</motion.div>
+
+			<Helmet>
+				<title>Daftar - Budgetly</title>
+				<meta
+					name="description"
+					content="Daftar akun Budgetly untuk mengelola keuangan pribadi."
+				/>
+			</Helmet>
 		</div>
 	)
 }

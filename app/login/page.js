@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import cookie from 'cookiejs'
 
 export default function LoginPage() {
 	const [email, setEmail] = useState('')
@@ -39,9 +40,9 @@ export default function LoginPage() {
 			{
 				loading: 'Memproses masuk...',
 				success: (response) => {
-					localStorage.setItem('token', response.data.token)
+					const { token } = response.data
+					cookie.set('auth_budgetly', token)
 					window.location.href = '/dashboard'
-					return 'Berhasil masuk!'
 				},
 				error: (error) => {
 					setError(error.response.data.message)

@@ -1,13 +1,18 @@
 'use client'
 
 import { Icon } from '@iconify/react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Sidebar({
 	isSidebarOpen,
 	setSidebarOpen,
+	setPopUpLogoutOpen,
 	profilePicUser,
 	user,
 }) {
+	const pathname = usePathname()
+
 	return (
 		<aside
 			className={`${
@@ -44,51 +49,62 @@ export default function Sidebar({
 
 			<nav className="flex-grow p-4">
 				{[
-					{ name: 'Dashboard', icon: 'ic:baseline-dashboard', active: true },
+					{
+						name: 'Dashboard',
+						icon: 'ic:baseline-dashboard',
+						path: '/dashboard/home',
+					},
 					{
 						name: 'Transaksi',
 						icon: 'ic:baseline-receipt-long',
-						active: false,
+						path: '/dashboard/transaksi',
 					},
 					{
 						name: 'AI Insights',
 						icon: 'ic:baseline-insights',
-						active: false,
+						path: '/dashboard/ai-insights',
 					},
-					{ name: 'Profil', icon: 'ic:baseline-person', active: false },
-				].map((item) => (
-					<a
-						href="#"
-						key={item.name}
-						className={`flex items-center px-3 py-0.5 space-x-4 rounded-lg transition-all duration-200 ${
-							item.active ? 'bg-primary shadow-md' : 'hover:bg-gray-800'
-						}`}
-					>
-						<div
-							className={`flex items-center justify-center w-12 h-12 rounded-full ${
-								item.active ? 'bg-primary-500 text-white' : ''
+					{
+						name: 'Profil',
+						icon: 'ic:baseline-person',
+						path: '/dashboard/profil',
+					},
+				].map((item) => {
+					const isActive = pathname === item.path
+					return (
+						<Link
+							href={item.path}
+							key={item.name}
+							className={`flex items-center px-3 py-0.5 space-x-4 rounded-lg transition-all duration-200 ${
+								isActive ? 'bg-primary shadow-md' : 'hover:bg-gray-800'
 							}`}
 						>
-							<Icon
-								icon={item.icon}
-								width="24"
-								className={`${
-									item.active ? 'text-white' : 'text-gray-400'
-								} transition-colors`}
-							/>
-						</div>
-
-						{isSidebarOpen && (
-							<span
-								className={`text-sm font-medium ${
-									item.active ? 'text-white' : 'text-gray-300'
+							<div
+								className={`flex items-center justify-center w-12 h-12 rounded-full ${
+									isActive ? 'bg-primary-500 text-white' : ''
 								}`}
 							>
-								{item.name}
-							</span>
-						)}
-					</a>
-				))}
+								<Icon
+									icon={item.icon}
+									width="24"
+									className={`${
+										isActive ? 'text-white' : 'text-gray-400'
+									} transition-colors`}
+								/>
+							</div>
+
+							{isSidebarOpen && (
+								<span
+									className={`text-sm font-medium ${
+										isActive ? 'text-white' : 'text-gray-300'
+									}`}
+								>
+									{item.name}
+								</span>
+							)}
+						</Link>
+					)
+				})}
 			</nav>
 
 			<div className="p-4 border-t border-gray-800 flex flex-col gap-4">
@@ -110,13 +126,13 @@ export default function Sidebar({
 					)}
 				</div>
 
-				<a
-					href="#"
+				<button
+					onClick={() => setPopUpLogoutOpen(true)}
 					className="flex items-center space-x-4 hover:text-white hover:bg-red-800 rounded-lg px-4 py-2 transition-all duration-200"
 				>
 					<Icon icon="ic:baseline-logout" width="24" />
 					{isSidebarOpen && <span className="text-sm font-medium">Logout</span>}
-				</a>
+				</button>
 			</div>
 		</aside>
 	)

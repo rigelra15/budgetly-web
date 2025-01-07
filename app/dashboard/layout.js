@@ -5,9 +5,11 @@ import Sidebar from '../components/Sidebar'
 import { getUserData } from '../utils/auth'
 import HashLoader from 'react-spinners/HashLoader'
 import Home from '../components/Home'
+import PopupDialog from '../components/PopupDialog'
 
-export default function Dashboard() {
+export default function DashboardLayout({ children }) {
 	const [isSidebarOpen, setSidebarOpen] = useState(true)
+	const [isPopUpLogoutOpen, setPopUpLogoutOpen] = useState(false)
 	const [user, setUser] = useState(null)
 	const [profilePicUser, setProfilePicUser] = useState(null)
 	const [isLoading, setIsLoading] = useState(true)
@@ -71,12 +73,16 @@ export default function Dashboard() {
 			<Sidebar
 				isSidebarOpen={isSidebarOpen}
 				setSidebarOpen={setSidebarOpen}
+				setPopUpLogoutOpen={setPopUpLogoutOpen}
 				profilePicUser={profilePicUser}
 				user={user}
 			/>
 
 			{/* Main Content */}
-			<Home />
+			<div className="flex-grow p-6">
+				{/* Menyediakan ruang untuk children */}
+				{children}
+			</div>
 		</div>
 	)
 }

@@ -1,17 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import cookie from 'cookiejs'
+import HashLoader from 'react-spinners/HashLoader'
+import { getUserData } from '../utils/auth'
 
 export default function LoginPage() {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
 	const [error, setError] = useState('')
+	const [isLoading, setIsLoading] = useState(true)
 
 	const containerVariants = {
 		hidden: { opacity: 0, scale: 0.8 },
@@ -29,6 +32,24 @@ export default function LoginPage() {
 			transition: { duration: 0.4 },
 		},
 	}
+
+	useEffect(() => {
+		const fetchData = async () => {
+			setIsLoading(true)
+			try {
+				const userData = await getUserData()
+				if (userData) {
+					window.location.href = '/dashboard'
+				}
+			} catch (error) {
+				console.error('Error fetching user data:', error)
+			} finally {
+				setIsLoading(false)
+			}
+		}
+
+		fetchData()
+	}, [])
 
 	const handleLogin = async (e) => {
 		e.preventDefault()
@@ -49,6 +70,21 @@ export default function LoginPage() {
 					return error.response.data.message
 				},
 			}
+		)
+	}
+
+	if (isLoading) {
+		return (
+			<div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+				<HashLoader
+					color={'#3f8c92'}
+					loading={isLoading}
+					size={30}
+					aria-label="Loading Spinner"
+					data-testid="loader"
+				/>
+				<p className="mt-4 text-gray-600">Memeriksa data pengguna...</p>
+			</div>
 		)
 	}
 

@@ -27,3 +27,13 @@ export async function getUserData() {
 		return null
 	}
 }
+
+export async function logout() {
+	if (typeof window === 'undefined') {
+		console.error('Fungsi ini hanya dapat dipanggil di sisi client.')
+		return
+	}
+
+	cookie.remove('auth_budgetly')
+	window.location.href = '/login'
+}

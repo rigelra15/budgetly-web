@@ -3,15 +3,37 @@
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Swal from 'sweetalert2'
+import { logout } from '../utils/auth'
 
 export default function Sidebar({
 	isSidebarOpen,
 	setSidebarOpen,
-	setPopUpLogoutOpen,
 	profilePicUser,
 	user,
 }) {
 	const pathname = usePathname()
+
+	const handleLogout = async () => {
+		const result = await Swal.fire({
+			title: 'Apakah Anda yakin?',
+			text: 'Anda akan logout dari akun ini.',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Ya, Logout',
+			cancelButtonText: 'Batal',
+		})
+
+		if (result.isConfirmed) {
+			try {
+				await logout()
+			} catch (error) {
+				Swal.fire('Error', 'Gagal logout. Silakan coba lagi.', 'error')
+			}
+		}
+	}
 
 	return (
 		<aside
@@ -50,24 +72,24 @@ export default function Sidebar({
 			<nav className="flex-grow p-4">
 				{[
 					{
-						name: 'Dashboard',
-						icon: 'ic:baseline-dashboard',
+						name: 'Beranda',
+						icon: 'ic:baseline-home',
 						path: '/dashboard/home',
 					},
 					{
 						name: 'Transaksi',
 						icon: 'ic:baseline-receipt-long',
-						path: '/dashboard/transaksi',
+						path: '/dashboard/transaction',
 					},
 					{
-						name: 'AI Insights',
-						icon: 'ic:baseline-insights',
-						path: '/dashboard/ai-insights',
+						name: 'Chatbot AI',
+						icon: 'ic:baseline-chat',
+						path: '/dashboard/chatbot-ai',
 					},
 					{
 						name: 'Profil',
 						icon: 'ic:baseline-person',
-						path: '/dashboard/profil',
+						path: '/dashboard/profile',
 					},
 				].map((item) => {
 					const isActive = pathname === item.path
@@ -127,7 +149,7 @@ export default function Sidebar({
 				</div>
 
 				<button
-					onClick={() => setPopUpLogoutOpen(true)}
+					onClick={handleLogout}
 					className="flex items-center space-x-4 hover:text-white hover:bg-red-800 rounded-lg px-4 py-2 transition-all duration-200"
 				>
 					<Icon icon="ic:baseline-logout" width="24" />

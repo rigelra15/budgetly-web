@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Sidebar from '../components/Sidebar'
-import { getUserData } from '../utils/auth'
+import { fetchProfilePic, getUserData } from '../utils/auth'
 import HashLoader from 'react-spinners/HashLoader'
-import Home from '../components/Home'
-import PopupDialog from '../components/PopupDialog'
 
 export default function DashboardLayout({ children }) {
 	const [isSidebarOpen, setSidebarOpen] = useState(true)
@@ -31,30 +29,23 @@ export default function DashboardLayout({ children }) {
 	}, [])
 
 	useEffect(() => {
-		if (user) {
-			const fetchProfilePic = async () => {
-				try {
-					const response = await fetch(
-						`https://budgetly-api-pa7n.vercel.app/api/users/user/${user.id}/profile-pic`
-					)
-					const data = await response.json()
-					setProfilePicUser(data.signedUrl)
-				} catch (error) {
-					console.error('Error fetching profile picture:', error)
-				}
+		const fetchProfPic = async () => {
+			try {
+				const response = await fetchProfilePic()
+				setProfilePicUser(response)
+			} catch (error) {
+				console.error('Error fetching profile picture:', error)
 			}
-
-			fetchProfilePic()
 		}
 
-		return () => {
-			setProfilePicUser(null)
+		if (user) {
+			fetchProfPic()
 		}
 	}, [user])
 
 	if (isLoading) {
 		return (
-			<div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+			<div className="flex flex-col items-center justify-center h-screen bg-white">
 				<HashLoader
 					color={'#3f8c92'}
 					loading={isLoading}
@@ -79,7 +70,7 @@ export default function DashboardLayout({ children }) {
 			/>
 
 			{/* Main Content */}
-			<div className="flex-grow p-6">
+			<div className="flex-grow">
 				{/* Menyediakan ruang untuk children */}
 				{children}
 			</div>

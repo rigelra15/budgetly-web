@@ -39,7 +39,7 @@ export default function LoginPage() {
 			try {
 				const userData = await getUserData()
 				if (userData) {
-					window.location.href = '/dashboard'
+					window.location.href = '/dashboard/home'
 				}
 			} catch (error) {
 				console.error('Error fetching user data:', error)
@@ -63,7 +63,7 @@ export default function LoginPage() {
 				success: (response) => {
 					const { token } = response.data
 					cookie.set('auth_budgetly', token)
-					window.location.href = '/dashboard'
+					window.location.href = '/dashboard/home'
 				},
 				error: (error) => {
 					setError(error.response.data.message)
